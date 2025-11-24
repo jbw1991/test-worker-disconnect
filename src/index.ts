@@ -3,8 +3,14 @@ import { Hono } from "hono";
 const app = new Hono<{ Bindings: CloudflareBindings }>();
 
 app.onError((e, c) => {
-  console.error(e);
+  console.error(`onError: ${e}`);
   return c.text("error!", 500);
+});
+
+app.use(async (c, next) => {
+  console.log("request started");
+  await next();
+  console.log("request finished");
 });
 
 app.use(async (c, next) => {
