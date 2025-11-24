@@ -2,18 +2,18 @@ import { Hono } from "hono";
 
 const app = new Hono<{ Bindings: CloudflareBindings }>();
 
-app.use((c, next) => {
+app.onError((e, c) => {
+  console.error(e);
+  return c.text("error!", 500);
+});
+
+app.use(async (c, next) => {
   c.req.raw.signal.addEventListener("abort", () => {
     console.log("aborted!");
     throw new Error("aborted!");
   });
 
-  return next();
-});
-
-app.onError((e, c) => {
-  console.error(e);
-  return c.text("error!", 500);
+  await next();
 });
 
 app.get("/message", (c) => {
