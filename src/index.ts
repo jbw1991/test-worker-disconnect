@@ -11,6 +11,11 @@ app.use((c, next) => {
   return next();
 });
 
+app.onError((e, c) => {
+  console.error(e);
+  return c.text("error!", 500);
+});
+
 app.get("/message", (c) => {
   return c.text("Hello Hono!");
 });
