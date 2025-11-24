@@ -5,6 +5,7 @@ const app = new Hono<{ Bindings: CloudflareBindings }>();
 app.use((c, next) => {
   c.req.raw.signal.addEventListener("abort", () => {
     console.log("aborted!");
+    throw new Error("aborted!");
   });
 
   return next();
